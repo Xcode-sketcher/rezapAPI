@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "98wrCdIj/QI=",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Eduar\\.nuget\\packages\\microsoft.aspnetcore.openapi\\10.0.0-rc.2.25502.107\\microsoft.aspnetcore.openapi.10.0.0-rc.2.25502.107.nupkg.sha512",
+    "C:\\Users\\Eduar\\.nuget\\packages\\microsoft.openapi\\2.0.0\\microsoft.openapi.2.0.0.nupkg.sha512",
+    "C:\\Users\\Eduar\\.nuget\\packages\\scalar.aspnetcore\\2.9.0\\scalar.aspnetcore.2.9.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,10 @@
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\rezapAPI.exe
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\appsettings.Development.json
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\appsettings.json
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\rezapAPI.dll
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\rezapAPI.deps.json
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\rezapAPI.runtimeconfig.json
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\rezapAPI.pdb
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\Microsoft.AspNetCore.OpenApi.dll
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\Microsoft.OpenApi.dll
+C:\Users\Eduar\Downloads\PROA\Atividades - entregue\rezap\rezapAPI\publish\Scalar.AspNetCore.dll
