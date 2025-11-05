@@ -39,12 +39,17 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
-// Configure JWT Authentication
-var secretKey = builder.Configuration["JwtSettings:SecretKey"] 
-    ?? Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+var configuredJwt = builder.Configuration["JwtSettings:SecretKey"];
+var envJwt = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
 
-if (string.IsNullOrEmpty(secretKey))
-    throw new InvalidOperationException("JWT secret key not configured");
+
+var secretKey = !string.IsNullOrWhiteSpace(configuredJwt) ? configuredJwt : envJwt;
+
+if (string.IsNullOrWhiteSpace(secretKey))
+    throw new InvalidOperationException("JWT secret key not configured. Set JwtSettings:SecretKey or the JWT_SECRET_KEY environment variable.");
+
+if (secretKey!.Length < 32)
+    throw new InvalidOperationException("JWT secret key must be at least 32 characters long for secure signing.");
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
