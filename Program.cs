@@ -16,8 +16,6 @@ builder.Services.AddControllers();
 // Configure DbContext with SQL Server
 var configured = builder.Configuration.GetConnectionString("DefaultConnection");
 var envConn = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
-
-// Prefer a non-empty value from configuration, otherwise fall back to the environment variable.
 var connectionString = !string.IsNullOrWhiteSpace(configured) ? configured : envConn;
 
 if (string.IsNullOrWhiteSpace(connectionString))
@@ -41,15 +39,13 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 var configuredJwt = builder.Configuration["JwtSettings:SecretKey"];
 var envJwt = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
-
-
 var secretKey = !string.IsNullOrWhiteSpace(configuredJwt) ? configuredJwt : envJwt;
 
 if (string.IsNullOrWhiteSpace(secretKey))
-    throw new InvalidOperationException("JWT secret key not configured. Set JwtSettings:SecretKey or the JWT_SECRET_KEY environment variable.");
+    throw new InvalidOperationException("JWT secret key not configured.");
 
 if (secretKey!.Length < 32)
-    throw new InvalidOperationException("JWT secret key must be at least 32 characters long for secure signing.");
+    throw new InvalidOperationException("JWT secret key must be at least 32 characters long.");
 
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
 
@@ -74,10 +70,10 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Configure CORS
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", policy =>
+    options.AddDefaultPolicy(policy =>
     {
         policy.AllowAnyOrigin()
               .AllowAnyMethod()
@@ -87,7 +83,7 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
-// Apply migrations automatically on startup (for cloud deployments)
+// Apply migrations automatically
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
@@ -109,18 +105,12 @@ if (app.Environment.IsDevelopment())
     app.MapScalarApiReference();
 }
 
-// Enable CORS
-app.UseCors("AllowAll");
 
-// app.UseHttpsRedirection(); // Comentado para facilitar desenvolvimento local
+app.UseCors();  
 
-// Enable Authentication & Authorization
 app.UseAuthentication();
 app.UseAuthorization();
-
-// Map controllers
 app.MapControllers();
-
 
 app.MapGet("/", () => Results.Ok(new { status = "OK", message = "Rezap API is running" }));
 
