@@ -90,8 +90,16 @@ namespace rezapAPI.Controller
         private string GenerateJwtToken(User user)
         {
             var jwtSettings = _configuration.GetSection("JwtSettings");
-            var secretKey = jwtSettings["SecretKey"];
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+            
+            // Read from config first, fallback to environment variable
+            var configKey = jwtSettings["SecretKey"];
+            var envKey = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+            var secretKey = !string.IsNullOrWhiteSpace(configKey) ? configKey : envKey;
+            
+            if (string.IsNullOrWhiteSpace(secretKey))
+                throw new InvalidOperationException("JWT secret key not configured");
+            
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var claims = new[]
