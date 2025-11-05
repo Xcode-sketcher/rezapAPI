@@ -39,10 +39,16 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
 
 var configuredJwt = builder.Configuration["JwtSettings:SecretKey"];
 var envJwt = Environment.GetEnvironmentVariable("JWT_SECRET_KEY");
+
+Console.WriteLine($"[JWT DEBUG] JwtSettings:SecretKey from config: {(string.IsNullOrWhiteSpace(configuredJwt) ? "EMPTY" : "SET")}");
+Console.WriteLine($"[JWT DEBUG] JWT_SECRET_KEY from env: {(string.IsNullOrWhiteSpace(envJwt) ? "EMPTY" : "SET")}");
+
 var secretKey = !string.IsNullOrWhiteSpace(configuredJwt) ? configuredJwt : envJwt;
 
 if (string.IsNullOrWhiteSpace(secretKey))
-    throw new InvalidOperationException("JWT secret key not configured.");
+    throw new InvalidOperationException("JWT secret key not configured. Check JWT_SECRET_KEY environment variable.");
+
+Console.WriteLine($"[JWT DEBUG] Final secret key length: {secretKey.Length}");
 
 if (secretKey!.Length < 32)
     throw new InvalidOperationException("JWT secret key must be at least 32 characters long.");
