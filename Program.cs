@@ -14,10 +14,13 @@ builder.Services.AddOpenApi();
 builder.Services.AddControllers();
 
 // Configure DbContext with SQL Server
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-    ?? Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
+var configured = builder.Configuration.GetConnectionString("DefaultConnection");
+var envConn = Environment.GetEnvironmentVariable("DATABASE_CONNECTION_STRING");
 
-if (string.IsNullOrEmpty(connectionString))
+// Prefer a non-empty value from configuration, otherwise fall back to the environment variable.
+var connectionString = !string.IsNullOrWhiteSpace(configured) ? configured : envConn;
+
+if (string.IsNullOrWhiteSpace(connectionString))
     throw new InvalidOperationException("Database connection string not configured");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
