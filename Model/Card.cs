@@ -6,19 +6,11 @@ using System.Threading.Tasks;
 
 namespace rezapAPI.Model
 {
-    public class Card
+    public class Column
     {
-        public int Id { get; set; }
-        
-        [Required]
+        public string Id { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
-        
-        [Required]
-        public string Value { get; set; } = string.Empty;
-        
-        [Required]
-        public string Icon { get; set; } = string.Empty;
-        
+        public int Order { get; set; }
         public string? Color { get; set; }
     }
 }

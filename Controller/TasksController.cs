@@ -1,129 +1,197 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
+using rezapAPI.Data;
 using rezapAPI.Model;
+using TaskModel = rezapAPI.Model.Task;
 
 namespace rezapAPI.Controller
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class TasksController : ControllerBase
     {
-        private static List<Model.Task> tasks = new List<Model.Task>
+        private readonly ApplicationDbContext _context;
+
+        public TasksController(ApplicationDbContext context)
         {
-            new Model.Task
-            {
-                Id = 1,
-                Title = "Revisar código do projeto",
-                Description = "Verificar as mudanças recentes e fazer code review",
-                Completed = false,
-                Priority = "high",
-                DueDate = new DateTime(2025, 11, 20),
-                CreatedAt = DateTime.UtcNow
-            },
-            new Model.Task
-            {
-                Id = 2,
-                Title = "Atualizar documentação",
-                Description = "Documentar as novas features",
-                Completed = false,
-                Priority = "medium",
-                DueDate = new DateTime(2025, 11, 25),
-                CreatedAt = DateTime.UtcNow
-            },
-            new Model.Task
-            {
-                Id = 3,
-                Title = "Reunião com a equipe",
-                Description = "Alinhamento do sprint",
-                Completed = true,
-                Priority = "low",
-                DueDate = new DateTime(2025, 11, 15),
-                CreatedAt = DateTime.UtcNow.AddDays(-2)
-            },
-            new Model.Task
-            {
-                Id = 4,
-                Title = "Implementar nova feature",
-                Description = "Adicionar sistema de notificações",
-                Completed = false,
-                Priority = "high",
-                DueDate = new DateTime(2025, 11, 30),
-                CreatedAt = DateTime.UtcNow
-            },
-            new Model.Task
-            {
-                Id = 5,
-                Title = "Code review semanal",
-                Description = "Revisar PRs da semana",
-                Completed = false,
-                Priority = "medium",
-                DueDate = new DateTime(2025, 11, 22),
-                CreatedAt = DateTime.UtcNow
-            }
-        };
+            _context = context;
+        }
+
+        private string GetCurrentUserId()
+        {
+            return User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+        }
 
         [HttpGet]
-        public IActionResult GetAllTasks()
+        public async Task<ActionResult<IEnumerable<TaskModel>>> GetAll()
         {
+            var userId = GetCurrentUserId();
+            var tasks = await _context.Tasks
+                .Where(t => t.UserId == userId)
+                .OrderByDescending(t => t.CreatedAt)
+                .ToListAsync();
+            
             return Ok(tasks);
         }
 
-        [HttpGet("{id:int}")]
-        public IActionResult GetTaskById(int id)
+        [HttpGet("{id}")]
+        public async Task<ActionResult<TaskModel>> GetById(int id)
         {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null) return NotFound();
+            var userId = GetCurrentUserId();
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            
+            if (task == null)
+                return NotFound();
+            
             return Ok(task);
+        }
+
+        [HttpGet("column/{columnId}")]
+        public async Task<ActionResult<IEnumerable<TaskModel>>> GetByColumn(string columnId)
+        {
+            var userId = GetCurrentUserId();
+            var tasks = await _context.Tasks
+                .Where(t => t.ColumnId == columnId && t.UserId == userId)
+                .OrderBy(t => t.CreatedAt)
+                .ToListAsync();
+            
+            return Ok(tasks);
         }
 
         [HttpPost]
-        public IActionResult CreateTask([FromBody] Model.Task newTask)
+        public async Task<ActionResult<TaskModel>> Create([FromBody] TaskModel task)
         {
-            if (!ModelState.IsValid)
-                return BadRequest(ModelState);
+            if (string.IsNullOrWhiteSpace(task.Title))
+                return BadRequest("Title is required");
 
-            newTask.Id = tasks.Any() ? tasks.Max(t => t.Id) + 1 : 1;
-            newTask.CreatedAt = DateTime.UtcNow;
-            tasks.Add(newTask);
+            var userId = GetCurrentUserId();
+            task.UserId = userId;
+            task.CreatedAt = DateTime.UtcNow;
             
-            return CreatedAtAction(nameof(GetTaskById), new { id = newTask.Id }, newTask);
+            if (string.IsNullOrWhiteSpace(task.ColumnId))
+                task.ColumnId = "todo";
+
+            _context.Tasks.Add(task);
+            await _context.SaveChangesAsync();
+            
+            return CreatedAtAction(nameof(GetById), new { id = task.Id }, task);
         }
 
-        [HttpPut("{id:int}")]
-        public IActionResult UpdateTask(int id, [FromBody] Model.Task updatedTask)
+        [HttpPut("{id}")]
+        public async Task<ActionResult<TaskModel>> Update(int id, [FromBody] TaskModel updatedTask)
         {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null) return NotFound();
-
-            task.Title = updatedTask.Title ?? task.Title;
-            task.Description = updatedTask.Description ?? task.Description;
-            task.Priority = updatedTask.Priority ?? task.Priority;
-            task.DueDate = updatedTask.DueDate ?? task.DueDate;
+            var userId = GetCurrentUserId();
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
             
-           
-            if (updatedTask.Completed != task.Completed)
-                task.Completed = updatedTask.Completed;
+            if (task == null)
+                return NotFound();
 
+            if (!string.IsNullOrWhiteSpace(updatedTask.Title))
+                task.Title = updatedTask.Title;
+            
+            if (updatedTask.Description != null)
+                task.Description = updatedTask.Description;
+            
+            task.Completed = updatedTask.Completed;
+            
+            if (!string.IsNullOrWhiteSpace(updatedTask.Priority))
+                task.Priority = updatedTask.Priority;
+            
+            if (!string.IsNullOrWhiteSpace(updatedTask.ColumnId))
+                task.ColumnId = updatedTask.ColumnId;
+            
+            if (updatedTask.DueDate.HasValue)
+                task.DueDate = updatedTask.DueDate;
+
+            await _context.SaveChangesAsync();
             return Ok(task);
         }
 
-        [HttpPut("{id:int}/toggle")]
-        public IActionResult ToggleTask(int id)
+        [HttpPatch("{id}/move")]
+        public async Task<ActionResult<TaskModel>> MoveToColumn(int id, [FromBody] MoveTaskRequest request)
         {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null) return NotFound();
+            var userId = GetCurrentUserId();
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            
+            if (task == null)
+                return NotFound();
+
+            task.ColumnId = request.ColumnId;
+            await _context.SaveChangesAsync();
+            
+            return Ok(task);
+        }
+
+        [HttpPut("{id}/toggle")]
+        public async Task<ActionResult<TaskModel>> Toggle(int id)
+        {
+            var userId = GetCurrentUserId();
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            
+            if (task == null)
+                return NotFound();
 
             task.Completed = !task.Completed;
+            await _context.SaveChangesAsync();
+            
             return Ok(task);
         }
 
-        [HttpDelete("{id:int}")]
-        public IActionResult DeleteTask(int id)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
         {
-            var task = tasks.FirstOrDefault(t => t.Id == id);
-            if (task == null) return NotFound();
+            var userId = GetCurrentUserId();
+            var task = await _context.Tasks
+                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            
+            if (task == null)
+                return NotFound();
 
-            tasks.Remove(task);
+            _context.Tasks.Remove(task);
+            await _context.SaveChangesAsync();
+            
             return NoContent();
         }
+
+        [HttpGet("stats")]
+        public async Task<ActionResult<TaskStats>> GetStats()
+        {
+            var userId = GetCurrentUserId();
+            var userTasks = await _context.Tasks
+                .Where(t => t.UserId == userId)
+                .ToListAsync();
+            
+            var stats = new TaskStats
+            {
+                Total = userTasks.Count,
+                Active = userTasks.Count(t => !t.Completed),
+                Completed = userTasks.Count(t => t.Completed),
+                HighPriority = userTasks.Count(t => t.Priority == "high" && !t.Completed),
+                Overdue = userTasks.Count(t => t.DueDate.HasValue && t.DueDate < DateTime.UtcNow && !t.Completed)
+            };
+
+            return Ok(stats);
+        }
+    }
+
+    public class MoveTaskRequest
+    {
+        public string ColumnId { get; set; } = string.Empty;
+    }
+
+    public class TaskStats
+    {
+        public int Total { get; set; }
+        public int Active { get; set; }
+        public int Completed { get; set; }
+        public int HighPriority { get; set; }
+        public int Overdue { get; set; }
     }
 }
