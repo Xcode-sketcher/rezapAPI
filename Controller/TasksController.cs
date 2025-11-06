@@ -25,12 +25,26 @@ namespace rezapAPI.Controller
             return User.FindFirstValue(ClaimTypes.NameIdentifier)!;
         }
 
+        private Guid? GetHeaderTeamId()
+        {
+            if (Request.Headers.TryGetValue("X-Team-Id", out var values))
+            {
+                if (Guid.TryParse(values.FirstOrDefault(), out var gid))
+                    return gid;
+            }
+            return null;
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskModel>>> GetAll()
         {
             var userId = GetCurrentUserId();
-            var tasks = await _context.Tasks
-                .Where(t => t.UserId == userId)
+            var teamId = GetHeaderTeamId();
+            var query = _context.Tasks.AsQueryable();
+            query = query.Where(t => t.UserId == userId);
+            if (teamId.HasValue)
+                query = query.Where(t => t.TeamId == teamId);
+            var tasks = await query
                 .OrderByDescending(t => t.CreatedAt)
                 .ToListAsync();
             
@@ -54,8 +68,12 @@ namespace rezapAPI.Controller
         public async Task<ActionResult<IEnumerable<TaskModel>>> GetByColumn(string columnId)
         {
             var userId = GetCurrentUserId();
-            var tasks = await _context.Tasks
-                .Where(t => t.ColumnId == columnId && t.UserId == userId)
+            var teamId = GetHeaderTeamId();
+            var query = _context.Tasks.AsQueryable();
+            query = query.Where(t => t.ColumnId == columnId && t.UserId == userId);
+            if (teamId.HasValue)
+                query = query.Where(t => t.TeamId == teamId);
+            var tasks = await query
                 .OrderBy(t => t.CreatedAt)
                 .ToListAsync();
             
@@ -69,7 +87,9 @@ namespace rezapAPI.Controller
                 return BadRequest("Title is required");
 
             var userId = GetCurrentUserId();
+            var teamId = GetHeaderTeamId();
             task.UserId = userId;
+            task.TeamId = teamId;
             task.CreatedAt = DateTime.UtcNow;
             
             if (string.IsNullOrWhiteSpace(task.ColumnId))
@@ -85,8 +105,12 @@ namespace rezapAPI.Controller
         public async Task<ActionResult<TaskModel>> Update(int id, [FromBody] TaskModel updatedTask)
         {
             var userId = GetCurrentUserId();
-            var task = await _context.Tasks
-                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            var teamId = GetHeaderTeamId();
+            var query = _context.Tasks.AsQueryable();
+            query = query.Where(t => t.Id == id && t.UserId == userId);
+            if (teamId.HasValue)
+                query = query.Where(t => t.TeamId == teamId);
+            var task = await query.FirstOrDefaultAsync();
             
             if (task == null)
                 return NotFound();
@@ -116,8 +140,12 @@ namespace rezapAPI.Controller
         public async Task<ActionResult<TaskModel>> MoveToColumn(int id, [FromBody] MoveTaskRequest request)
         {
             var userId = GetCurrentUserId();
-            var task = await _context.Tasks
-                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            var teamId = GetHeaderTeamId();
+            var query = _context.Tasks.AsQueryable();
+            query = query.Where(t => t.Id == id && t.UserId == userId);
+            if (teamId.HasValue)
+                query = query.Where(t => t.TeamId == teamId);
+            var task = await query.FirstOrDefaultAsync();
             
             if (task == null)
                 return NotFound();
@@ -132,8 +160,12 @@ namespace rezapAPI.Controller
         public async Task<ActionResult<TaskModel>> Toggle(int id)
         {
             var userId = GetCurrentUserId();
-            var task = await _context.Tasks
-                .FirstOrDefaultAsync(t => t.Id == id && t.UserId == userId);
+            var teamId = GetHeaderTeamId();
+            var query = _context.Tasks.AsQueryable();
+            query = query.Where(t => t.Id == id && t.UserId == userId);
+            if (teamId.HasValue)
+                query = query.Where(t => t.TeamId == teamId);
+            var task = await query.FirstOrDefaultAsync();
             
             if (task == null)
                 return NotFound();

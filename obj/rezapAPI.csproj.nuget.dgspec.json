@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj": {}
+    "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj": {
+    "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
+        "projectUniqueName": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj",
         "projectName": "rezapAPI",
-        "projectPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
+        "projectPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj",
         "packagesPath": "C:\\Users\\Eduar\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\obj\\",
+        "outputPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -88,24 +88,6 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
-          "downloadDependencies": [
-            {
-              "name": "Microsoft.AspNetCore.App.Runtime.win-x86",
-              "version": "[10.0.0-rc.2.25502.107, 10.0.0-rc.2.25502.107]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x86",
-              "version": "[10.0.0-rc.2.25502.107, 10.0.0-rc.2.25502.107]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Runtime.win-x86",
-              "version": "[10.0.0-rc.2.25502.107, 10.0.0-rc.2.25502.107]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Runtime.win-x86",
-              "version": "[10.0.0-rc.2.25502.107, 10.0.0-rc.2.25502.107]"
-            }
-          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
@@ -530,11 +512,6 @@
             "System.Xml.XPath": "(,4.3.32767]",
             "System.Xml.XPath.XDocument": "(,5.0.32767]"
           }
-        }
-      },
-      "runtimes": {
-        "win-x86": {
-          "#import": []
         }
       }
     }

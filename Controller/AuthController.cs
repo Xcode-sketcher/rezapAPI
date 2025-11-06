@@ -120,5 +120,13 @@ namespace rezapAPI.Controller
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
+
+        // Opcional: endpoint simples para "trocar" time via header (em futuras versões, emitir novo token com claim de team)
+        [HttpPost("switch-team")]
+        public ActionResult<object> SwitchTeam([FromHeader(Name = "X-Team-Id")] string? teamId)
+        {
+            // Nesta fase, apenas ecoamos o teamId; política real de troca de token será implementada depois
+            return Ok(new { activeTeamId = teamId });
+        }
     }
 }

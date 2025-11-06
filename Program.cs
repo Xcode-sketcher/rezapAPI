@@ -76,6 +76,8 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
+// Registrar serviço de auditoria
+builder.Services.AddScoped<rezapAPI.Controller.IAuditService, rezapAPI.Controller.AuditService>();
 
 builder.Services.AddCors(options =>
 {

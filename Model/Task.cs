@@ -16,5 +16,8 @@ namespace rezapAPI.Model
         // Foreign key para o usuário
         public string UserId { get; set; } = string.Empty;
         public User? User { get; set; }
+
+        // Escopo por time (Fase 1)
+        public Guid? TeamId { get; set; }
     }
 }

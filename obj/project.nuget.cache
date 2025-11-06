@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lqVOyNbRg0Y=",
+  "dgSpecHash": "THfmhAIYZug=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
+  "projectFilePath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Eduar\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Eduar\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",
@@ -57,11 +57,7 @@
     "C:\\Users\\Eduar\\.nuget\\packages\\system.runtime.caching\\6.0.0\\system.runtime.caching.6.0.0.nupkg.sha512",
     "C:\\Users\\Eduar\\.nuget\\packages\\system.security.cryptography.protecteddata\\6.0.0\\system.security.cryptography.protecteddata.6.0.0.nupkg.sha512",
     "C:\\Users\\Eduar\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
-    "C:\\Users\\Eduar\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512",
-    "C:\\Users\\Eduar\\.nuget\\packages\\microsoft.netcore.app.runtime.win-x86\\10.0.0-rc.2.25502.107\\microsoft.netcore.app.runtime.win-x86.10.0.0-rc.2.25502.107.nupkg.sha512",
-    "C:\\Users\\Eduar\\.nuget\\packages\\microsoft.windowsdesktop.app.runtime.win-x86\\10.0.0-rc.2.25502.107\\microsoft.windowsdesktop.app.runtime.win-x86.10.0.0-rc.2.25502.107.nupkg.sha512",
-    "C:\\Users\\Eduar\\.nuget\\packages\\microsoft.aspnetcore.app.runtime.win-x86\\10.0.0-rc.2.25502.107\\microsoft.aspnetcore.app.runtime.win-x86.10.0.0-rc.2.25502.107.nupkg.sha512",
-    "C:\\Users\\Eduar\\.nuget\\packages\\microsoft.netcore.app.host.win-x86\\10.0.0-rc.2.25502.107\\microsoft.netcore.app.host.win-x86.10.0.0-rc.2.25502.107.nupkg.sha512"
+    "C:\\Users\\Eduar\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
   "logs": []
 }
