@@ -3169,11 +3169,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj",
+      "projectUniqueName": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
       "projectName": "rezapAPI",
-      "projectPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj",
+      "projectPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
       "packagesPath": "C:\\Users\\Eduar\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\obj\\",
+      "outputPath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

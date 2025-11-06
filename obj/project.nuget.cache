@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "THfmhAIYZug=",
+  "dgSpecHash": "0El7mJs1xEg=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezap\\rezapAPI\\rezapAPI.csproj",
+  "projectFilePath": "C:\\Users\\Eduar\\Downloads\\PROA\\Atividades - entregue\\rezapAPI\\rezapAPI\\rezapAPI.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Eduar\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Eduar\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

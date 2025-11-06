@@ -1,8 +1,10 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using rezapAPI.Model;
 
 namespace rezapAPI.Controller
 {
+    [Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class ColumnsController : ControllerBase
@@ -15,7 +17,7 @@ namespace rezapAPI.Controller
             new Column { Id = "done", Title = "Concluído", Order = 3, Color = "#10b981" }
         };
 
-        // GET: api/columns
+        // GET: api/columns (todos podem visualizar)
         [HttpGet]
         public ActionResult<IEnumerable<Column>> GetAll()
         {

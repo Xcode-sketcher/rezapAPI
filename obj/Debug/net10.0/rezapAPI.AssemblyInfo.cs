@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("rezapAPI")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+613158c41733dfbac05873abfd03457bd0d0239d")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+22205b501abc905b37e5c78e725d960f540a1914")]
 [assembly: System.Reflection.AssemblyProductAttribute("rezapAPI")]
 [assembly: System.Reflection.AssemblyTitleAttribute("rezapAPI")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

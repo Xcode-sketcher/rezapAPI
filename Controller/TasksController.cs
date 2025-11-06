@@ -35,6 +35,29 @@ namespace rezapAPI.Controller
             return null;
         }
 
+        private async Task<TeamMember?> GetMembershipAsync(string userId, Guid teamId)
+        {
+            return await _context.TeamMembers.FirstOrDefaultAsync(tm => tm.UserId == userId && tm.TeamId == teamId && tm.IsActive);
+        }
+
+        private async Task<bool> CanWriteTasksAsync(string userId, Guid teamId)
+        {
+            var membership = await GetMembershipAsync(userId, teamId);
+            if (membership == null) return false;
+            // Todos os papéis podem criar/editar tarefas (Owner, Manager, Contributor)
+            return true;
+        }
+
+        private async Task<bool> CanDeleteTasksAsync(string userId, Guid teamId)
+        {
+            var membership = await GetMembershipAsync(userId, teamId);
+            if (membership == null) return false;
+            // Apenas Owner e Manager podem deletar tarefas
+            if (membership.BaseRole == TeamBaseRole.Owner || membership.BaseRole == TeamBaseRole.Manager) return true;
+            // Verifica grants específicos
+            return await _context.TeamRoleGrants.AnyAsync(g => g.TeamMemberId == membership.Id && g.Scope == "tasks:delete" && g.GrantType == GrantType.Allow);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TaskModel>>> GetAll()
         {
@@ -88,6 +111,14 @@ namespace rezapAPI.Controller
 
             var userId = GetCurrentUserId();
             var teamId = GetHeaderTeamId();
+
+            // Verifica permissão se estiver em um time
+            if (teamId.HasValue)
+            {
+                if (!await CanWriteTasksAsync(userId, teamId.Value))
+                    return Forbid();
+            }
+
             task.UserId = userId;
             task.TeamId = teamId;
             task.CreatedAt = DateTime.UtcNow;
@@ -114,6 +145,13 @@ namespace rezapAPI.Controller
             
             if (task == null)
                 return NotFound();
+
+            // Verifica permissão se estiver em um time
+            if (teamId.HasValue)
+            {
+                if (!await CanWriteTasksAsync(userId, teamId.Value))
+                    return Forbid();
+            }
 
             if (!string.IsNullOrWhiteSpace(updatedTask.Title))
                 task.Title = updatedTask.Title;
@@ -150,6 +188,13 @@ namespace rezapAPI.Controller
             if (task == null)
                 return NotFound();
 
+            // Verifica permissão se estiver em um time
+            if (teamId.HasValue)
+            {
+                if (!await CanWriteTasksAsync(userId, teamId.Value))
+                    return Forbid();
+            }
+
             task.ColumnId = request.ColumnId;
             await _context.SaveChangesAsync();
             
@@ -170,6 +215,13 @@ namespace rezapAPI.Controller
             if (task == null)
                 return NotFound();
 
+            // Verifica permissão se estiver em um time
+            if (teamId.HasValue)
+            {
+                if (!await CanWriteTasksAsync(userId, teamId.Value))
+                    return Forbid();
+            }
+
             task.Completed = !task.Completed;
             await _context.SaveChangesAsync();
             
@@ -185,6 +237,13 @@ namespace rezapAPI.Controller
             
             if (task == null)
                 return NotFound();
+
+            // Verifica permissão se estiver em um time
+            if (task.TeamId.HasValue)
+            {
+                if (!await CanDeleteTasksAsync(userId, task.TeamId.Value))
+                    return Forbid();
+            }
 
             _context.Tasks.Remove(task);
             await _context.SaveChangesAsync();
